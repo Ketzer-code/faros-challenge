@@ -6,6 +6,10 @@ output: pdf_document
 editor_options: 
   chunk_output_type: console
 ---
+```{r setup}
+reticulate::import("os")
+reticulate::import("pandas")
+```
 
 ## Exercício 1
 Considerando que o número 1 representa 01/01/1900,
@@ -62,3 +66,56 @@ o Excel estrutura suas datas, no programa, a função DATEVALUE(43101) retornar�
 01/01/2018.
 
 
+## Exercício 2
+
+Abaixo, os scripts que geram a tabela solicitada.
+
+Em Python:
+```{python}
+# importing libraries
+import os
+import pandas as pd
+
+# getting working directory
+wd = os.getcwd()
+
+# reading dataframe and renaming columns
+shares_df = pd.read_csv(wd + "/tabela_acoes.csv").rename(columns = {
+    "Ação":"ticker",
+    "Cliente":"client",
+    "QTD":"qtd",
+    "PREÇO":"price"
+})
+
+# calculating total invested amount per client
+shares_df.loc[:, "invested_amount"] = shares_df.loc[:, "qtd"] * shares_df.loc[:, "price"]
+total_invested_per_client = shares_df.groupby("client").invested_amount.sum().reset_index()
+
+total_invested_per_client
+```
+Em R:
+```{r}
+# importing libraries
+library(tidyverse)
+library(vroom)
+
+# getting working directory
+wd <- getwd()
+
+# reading dataframe and renaming columns
+shares_df <- vroom(paste0(wd, "/tabela_acoes.csv")) %>%
+                dplyr::rename(
+                    ticker = `Ação`,
+                    client = Cliente,
+                    qtd = QTD,
+                    price = `PREÇO`
+                )
+
+# calculating total invested amount per client
+total_invested_per_client <- shares_df %>%
+                                mutate(invested_amount = price * qtd) %>%
+                                group_by(client) %>%
+                                summarise(total_invested_amount = sum(invested_amount))
+
+total_invested_per_client
+```

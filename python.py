@@ -33,3 +33,26 @@ print(test_excel)
 
 test_datetime = excel_to_datetime(43101)
 print(test_datetime)
+
+# Exercicio 2
+
+# importing libraries
+import os
+import pandas as pd
+
+# getting working directory
+wd = os.getcwd()
+
+# reading dataframe and renaming columns
+shares_df = pd.read_csv(wd + "/tabela_acoes.csv").rename(columns = {
+    "Ação":"ticker",
+    "Cliente":"client",
+    "QTD":"qtd",
+    "PREÇO":"price"
+})
+
+# calculating total invested amount per client
+shares_df.loc[:, "invested_amount"] = shares_df.loc[:, "qtd"] * shares_df.loc[:, "price"]
+total_invested_per_client = shares_df.groupby("client").invested_amount.sum().reset_index()
+
+total_invested_per_client

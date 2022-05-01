@@ -4,7 +4,7 @@
 library(tidyverse)
 library(vroom)
 
-# setting working directory
+# getting working directory
 wd <- getwd()
 
 # reading dataframe and renaming columns
@@ -21,3 +21,5 @@ total_invested_per_client <- shares_df %>%
                                 mutate(invested_amount = price * qtd) %>%
                                 group_by(client) %>%
                                 summarise(total_invested_amount = sum(invested_amount))
+
+total_invested_per_client
