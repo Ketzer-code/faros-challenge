@@ -1,0 +1,53 @@
+---
+title: "Resposta ao case técnico - Faros"
+author: "Lucas Ketzer"
+date: "Abr/2022"
+output: pdf_document
+editor_options: 
+  chunk_output_type: console
+---
+
+## Exercício 1
+Considerando que o número 1 representa 01/01/1900,
+para que cada inteiro subsequente represente a data
+corretamente, basta considerar a data de referência
+como 31/12/1899 - para converter um datetime qualquer
+para o formato excel, calcula-se a diferença em dias
+entre a data de referência e o datetime. Para fazer o
+processo inverso, adiciona-se o número de dias à 31/12/1899:
+para 43101, obtém-se 02/01/2018.
+
+Em Python:
+
+```{python}
+import datetime as dt
+
+def datetime_to_excel(date: dt.datetime) -> int:
+
+    start_date = dt.datetime(1899, 12, 31)
+
+    diff_to_start = date - start_date
+    
+    return int(diff_to_start.days)
+
+def excel_to_datetime(date: int) -> dt.datetime:
+
+    start_date = dt.datetime(1899, 12, 31)
+
+    days_to_add = dt.timedelta(days = date)
+
+    datetime_date = start_date + days_to_add
+
+    return datetime_date
+
+
+teste_excel = datetime_to_excel(dt.datetime(2018, 1, 2))
+print(teste_excel)
+
+teste_datetime = excel_to_datetime(43101)
+print(teste_datetime)
+```
+
+Essa abordagem, entretanto, possui suas limitações - devido a maneira que
+o Excel estrutura suas datas, no programa, a função DATEVALUE(43101) retornará
+01/01/2018.
